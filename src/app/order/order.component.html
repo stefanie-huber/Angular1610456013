@@ -1,0 +1,279 @@
+<div class="ui middle aligned selection divided list" style="display:flex; flex-direction: column-reverse;">
+
+
+  <!------------------>
+  <!------------------->
+  <!------isAdmin------>
+  <ng-container *ngIf="isAdmin">
+
+    <ng-container *ngFor="let order of orders">
+
+      <hr/>
+      <div class="ui segment bestellung" style="cursor: default;">
+        <div class="ui teal top attached label">
+          <i class="order icon"></i>Bestellung
+        </div>
+        <div class="ui grid">
+          <div class="three column row">
+            <div class="column">
+              <div class="ui segment teal row">
+                <!--Order-ID-->
+                <h3>Nummer: {{order.id}}</h3>
+
+                <!--User-->
+                <p>Benutzer: {{order.user.first_name}} {{order.user.last_name}}</p>
+
+                <!--Order Date-->
+                <p>Bestellt am: {{order.created_at}}</p>
+              </div>
+            </div>
+
+
+            <div class="column">
+              <div class="ui segment teal aktuell row">
+                <h5>Aktueller Satus:
+                  <ng-container *ngIf="order.state == 1">Offen</ng-container>
+                  <ng-container *ngIf="order.state == 2">Bezahlt</ng-container>
+                  <ng-container *ngIf="order.state == 3">Versendet</ng-container>
+                  <ng-container *ngIf="order.state == 4">Storniert</ng-container>
+                </h5>
+                <!--Comment-->
+                <p>Kommentar: {{order.comment}}</p>
+              </div>
+            </div>
+
+            <!--address-->
+            <div class="column">
+              <div class="adresse ui segment teal">
+                <h5>Lieferadresse: </h5>
+                <!--<p>{{order.user.first_name}} {{order.user.last_name}}</p>-->
+                <p>{{order.user.street}}, {{order.user.house_number}}</p>
+                <p>{{order.user.postal_code}} {{order.user.town}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ui segment historie">
+          <!--<p>Status-Historie: </p>-->
+          <ng-container *ngFor="let orderlog of order.orderlogs">
+            <ng-container *ngIf="orderlog.order_id == order.id">
+              <div class="ui segment statushistorie">
+                <p>Statusänderung am {{orderlog.created_at}}</p>
+                <p>Status:
+                  <ng-container *ngIf="orderlog.state == 1">Offen</ng-container>
+                  <ng-container *ngIf="orderlog.state == 2">Bezahlt</ng-container>
+                  <ng-container *ngIf="orderlog.state == 3">Versendet</ng-container>
+                  <ng-container *ngIf="orderlog.state == 4">Storniert</ng-container>
+                </p>
+                <p>Kommentar:  {{orderlog.comment}}</p>
+              </div>
+            </ng-container>
+          </ng-container>
+        </div>
+
+        <!--State-->
+        <span>Satus:
+            <select (change)="onChange($event.target.value, order)" class="ui selection dropdown">
+              <input type="hidden" name="status">
+              <i class="dropdown icon"></i>
+              <option [ngValue]="offen">Offen</option>
+              <option [ngValue]="bezahlt">Bezahlt</option>
+              <option [ngValue]="versendet">Versendet</option>
+              <option [ngValue]="storniert">Storniert</option>
+            </select>
+          <!--Comment-->
+          <div class="ui input kommentar">
+            <input type="text" placeholder="Kommentar..." [(ngModel)]="stateValue">
+            <!--2-way data binding. mit [] geht die Variable rein und mit () wieder raus-->
+          </div>
+          <button class="ui small button teal kommentar" (click)="changeState(stateValue, order)">
+            Status ändern
+          </button>
+
+          </span>
+
+
+        <!--Books-->
+        <div class="buch three column row">
+
+          <ng-container *ngFor="let book of order.books">
+            <ng-container *ngIf="!viewedBooks.includes(book.isbn)">
+              <div class="buchitem ui segment teal column">
+                <div class="floated left">
+                  <div class="ui teal ribbon label">
+                    <i class="book icon"></i>Buch
+                  </div>
+
+                  <h5>{{book.title}}</h5>
+                  <p>Stückpreis: € {{book.pivot.book_price_at_order}}</p>
+                  <p>Anzahl: {{count(order.books, book.isbn)}}</p>
+                </div>
+              </div>
+            </ng-container>
+            {{push(book.isbn)}}
+          </ng-container>
+          <br>
+          {{clear()}}
+        </div>
+
+
+        <!--net Price-->
+        <p>Nettogesamtpreis: € {{getNetPrice(order.total_price)}}</p>
+
+        <!--gross price-->
+        <div class="ui segment black">
+          <h3>Gesamtpreis: € {{order.total_price}}</h3>
+        </div>
+        <hr/>
+      </div>
+    </ng-container>
+
+  </ng-container>
+
+
+  <!------------------>
+  <!------------------->
+  <!----noramlUser------>
+
+  <ng-container *ngIf="!isAdmin">
+
+    <ng-container *ngFor="let order of orders">
+      <ng-container *ngIf="order.user.id == currentUser">
+        <hr/>
+        <div class="ui segment bestellung" style="cursor: default;">
+          <div class="ui teal top attached label">
+            <i class="order icon"></i>Bestellung
+          </div>
+          <div class="ui grid">
+            <div class="three column row">
+              <div class="column">
+                <div class="ui segment teal row">
+                  <!--Order-ID-->
+                  <h3>Nummer: {{order.id}}</h3>
+
+                  <!--User-->
+                  <p>Benutzer: {{order.user.first_name}} {{order.user.last_name}}</p>
+
+                  <!--Order Date-->
+                  <p>Bestellt am: {{order.created_at}}</p>
+                </div>
+              </div>
+
+
+              <div class="column">
+                <div class="ui segment teal aktuell row">
+                  <h5>Aktueller Satus:
+                    <ng-container *ngIf="order.state == 1">Offen</ng-container>
+                    <ng-container *ngIf="order.state == 2">Bezahlt</ng-container>
+                    <ng-container *ngIf="order.state == 3">Versendet</ng-container>
+                    <ng-container *ngIf="order.state == 4">Storniert</ng-container>
+                  </h5>
+                  <!--Comment-->
+                  <ng-container *ngIf="order.comment != null">
+                    <p>Kommentar: {{order.comment}}</p>
+                  </ng-container>
+                </div>
+              </div>
+
+              <!--address-->
+              <div class="column">
+                <div class="adresse ui segment teal">
+                  <h5>Lieferadresse: </h5>
+                  <!--<p>{{order.user.first_name}} {{order.user.last_name}}</p>-->
+                  <p>{{order.user.street}}, {{order.user.house_number}}</p>
+                  <p> {{order.user.postal_code}} {{order.user.town}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ui segment historie">
+            <!--<p>Status-Historie: </p>-->
+            <ng-container *ngFor="let orderlog of order.orderlogs">
+              <ng-container *ngIf="orderlog.order_id == order.id">
+                <div class="ui segment statushistorie">
+                  <p>Statusänderung am {{orderlog.created_at}}</p>
+                  <p>Status:
+                    <ng-container *ngIf="orderlog.state == 1">Offen</ng-container>
+                    <ng-container *ngIf="orderlog.state == 2">Bezahlt</ng-container>
+                    <ng-container *ngIf="orderlog.state == 3">Versendet</ng-container>
+                    <ng-container *ngIf="orderlog.state == 4">Storniert</ng-container>
+                  </p>
+                  <p>Kommentar:  {{orderlog.comment}}</p>
+                </div>
+              </ng-container>
+            </ng-container>
+          </div>
+
+
+          <!--Books-->
+          <div class="buch three column row">
+
+            <ng-container *ngFor="let book of order.books">
+
+              <ng-container *ngIf="!viewedBooks.includes(book.isbn)">
+
+                <div class="buchitem ui segment teal column">
+                  <div class="floated left">
+                    <div class="ui teal ribbon label">
+                      <i class="book icon"></i>Buch
+                    </div>
+
+                    <h5>{{book.title}}</h5>
+                    <p>Stückpreis: € {{book.pivot.book_price_at_order}}</p>
+                    <p>Anzahl: {{count(order.books, book.isbn)}}</p>
+                  </div>
+                </div>
+              </ng-container>
+              {{push(book.isbn)}}
+            </ng-container>
+            <br>
+            {{clear()}}
+          </div>
+
+
+          <!--net Price-->
+          <p>Nettogesamtpreis: € {{getNetPrice(order.total_price)}}</p>
+
+          <!--gross price-->
+          <div class="ui segment black">
+            <h3>Gesamtpreis: € {{order.total_price}}</h3>
+          </div>
+
+        </div>
+        <hr/>
+
+      </ng-container>
+    </ng-container>
+  </ng-container>
+
+
+  <!--<div class="ui grid">
+    <ng-container *ngFor="let book of books">
+      <ng-container *ngFor="let savedBook of savedBooks">
+        <ng-container *ngIf="book.isbn == savedBook">
+
+
+          <div class="eight wide column">
+            <a class="bs-book-list-item item" [book]="book" [routerLink]="'../books/'+book.isbn"> </a>
+          </div>
+          <div class="two wide column">
+            <a (click)="deleteFromCart(book.isbn)" style="cursor: pointer;">Löschen</a>
+          </div>
+          <div class="two wide column" class="amount">
+            <div>
+
+              <span>{{count(book.isbn)}}</span>
+
+            </div>
+          </div>
+
+
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </div>
+
+  </div>-->
+

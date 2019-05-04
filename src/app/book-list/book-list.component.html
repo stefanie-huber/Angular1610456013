@@ -1,0 +1,8 @@
+<div class="ui middle aligned selection divided list">
+  <a class="bs-book-list-item item" *ngFor="let book of books" [book]="book"
+     [routerLink]="book.isbn">
+    <!-- das [book] nennt man property binding, damit man weiß, welches buch gemeint ist -->
+
+
+  </a>
+</div>

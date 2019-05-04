@@ -1,0 +1,27 @@
+<img class="ui tiny image floated left"
+     *ngIf="book?.images[0]"
+     [src]="book?.images[0]?.url">
+<div class="content aligned floated left">
+  <div class="header">{{book.title}}</div>
+  <div class="description">{{book.subtitle}}</div>
+  <div class="metadata">
+        <span *ngFor="let author of book.authors; last as l">
+          <!--der letzte author wird in variable l gespeichert-->
+          {{author.firstName}} {{author.lastName}}
+          <span *ngIf="!l">,</span>
+        </span>
+  </div>
+  <div class="extra">ISBN {{book.isbn}}</div>
+
+  <div class="ui centered aligned label floated left">
+    <div class="ui">
+      <div class="">
+        € {{book.price}} / Stk
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+

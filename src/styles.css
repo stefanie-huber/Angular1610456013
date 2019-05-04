@@ -1,0 +1,56 @@
+/* You can add global styles to this file, and also import other style files */
+.buch {
+  display: flex;
+}
+
+.ui.segment:first-child {
+  margin-top: 1em !important;
+}
+
+.buchitem.ui.segment {
+  margin: 1rem 1em !important;
+}
+
+
+.buchitem {
+  /*width: 20%;*/
+  height: 200px;
+}
+
+.statushistorie {
+  width: 50% !important;
+  margin-right: 10px !important;
+  height: 150px;
+}
+
+.aktuell {
+  /*width: 40%;*/
+  height: 119px;
+}
+
+.adresse {
+  /*width: 45%;*/
+  height: 119px;
+}
+
+.kommentar {
+  margin-left: 20px !important;
+}
+
+.historie {
+  display: flex;
+}
+
+.bestellung {
+  width: 60%;
+  margin-left: 20% !important;
+  background-color: #ebebe0 !important;
+}
+
+.authors {
+  width: 20%;
+}
+
+.save{
+  float: right;
+}

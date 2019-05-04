@@ -1,0 +1,45 @@
+<div class="ui grid middle aligned selection divided list">
+  <ng-container *ngFor="let book of books">
+    <ng-container *ngFor="let savedBook of savedBooks">
+      <ng-container *ngIf="book.isbn == savedBook">
+        <ng-container
+        <ng-container *ngIf="!shownBooks.includes(book.isbn)">
+          <div class=" item three column row">
+            <div class="column">
+              <a class="bs-book-list-item item" [book]="book" [routerLink]="'../books/'+book.isbn"></a>
+            </div>
+            <div class="column">
+              <div class="row">
+                <div class="column center aligned">
+                  <button (click)="increaseAmount(book.isbn)" class="ui tiny grey button" type="button">+</button>
+                  <span>{{count(book.isbn)}}</span>
+                  <button (click)="decreaseAmount(book.isbn)" class="ui tiny grey button" type="button"
+                          style="margin-left:5px;">-
+                  </button>
+                </div>
+              </div>
+              {{pushToCart(book.isbn)}}
+            </div>
+            <div class="column">
+              <button (click)="deleteFromCart(book.isbn)"
+                      class="ui wide olive labeled icon button right floated aligned">
+                <i class="close icon"></i>Löschen
+              </button>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+  <button class="ui teal labeled icon button center aligned" *ngIf="savedBooks.length !=0" style="margin:20px 0 0 8px;"
+          (click)="checkLogin()">
+    <i class="money icon"></i>
+    Bestellen
+  </button>
+</div>
+
+
+
+
+
+
